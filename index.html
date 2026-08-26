@@ -225,14 +225,27 @@
     padding:11px 10px; white-space:nowrap; text-decoration:none;
     display:flex; align-items:center; justify-content:center; gap:6px;
     transition:border-color .15s ease, color .15s ease;
+    /* Belt-and-braces: if a button is ever squeezed narrower than its own
+       label, clip and ellipsize instead of letting the text spill out of
+       its pill and read as "overlapping" the button next to it. */
+    overflow:hidden; text-overflow:ellipsis;
   }
   #ra-roam-widget .action-btn:hover{ color:var(--text); border-color:var(--line-strong); }
   #ra-roam-widget .action-btn.primary{ background:var(--orange); color:var(--on-orange); border-color:var(--orange); }
   @media(max-width:600px){
     #ra-roam-widget .action-bar.top{ padding:10px 0; }
     #ra-roam-widget .action-bar.bottom{ padding:16px 0 24px; }
-    #ra-roam-widget .action-bar .wrap{ padding-left:16px; padding-right:16px; }
-    #ra-roam-widget .action-btn{ font-size:11px; padding:10px 8px; min-width:0; }
+    /* A single scrolling row is easy to misread as overlapping buttons on a
+       narrow phone. A fixed 2x2 grid gives every button its own real estate
+       — nothing to scroll, nothing that can crowd into its neighbour. */
+    #ra-roam-widget .action-bar .wrap{
+      display:grid; grid-template-columns:1fr 1fr; gap:8px;
+      overflow-x:visible; padding-left:16px; padding-right:16px;
+    }
+    #ra-roam-widget .action-btn{ font-size:11px; padding:10px 6px; min-width:0; }
+  }
+  @media(max-width:360px){
+    #ra-roam-widget .action-btn{ font-size:10px; padding:9px 4px; }
   }
 </style>
 
