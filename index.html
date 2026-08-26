@@ -205,9 +205,48 @@
     #ra-roam-widget .fleet-out-grid{ gap:10px; }
     #ra-roam-widget .fleet-out-grid .tile .amt{ font-size:22px; }
   }
+  /* Quick-jump action bar, shown at the top and bottom of the calculators.
+     Not position:sticky — the widget root sets overflow-x:hidden (needed to
+     stop the phase-compare grid from scrolling the page sideways), and that
+     same rule quietly breaks position:sticky on any descendant, so a "sticky"
+     bottom bar would just sit inert. A plain bar at each end still puts the
+     four links where the user is, without relying on sticky behaviour that
+     wouldn't actually stick here. */
+  #ra-roam-widget .action-bar{ background:var(--bg); }
+  #ra-roam-widget .action-bar.top{ border-bottom:1px solid var(--line); padding:14px 0; }
+  #ra-roam-widget .action-bar.bottom{ border-top:1px solid var(--line); padding:20px 0 32px; }
+  /* More specific than the mobile ".wrap{ padding:0; }" rule below, so the
+     action bar keeps a gutter even when section wraps go edge-to-edge. */
+  #ra-roam-widget .action-bar .wrap{ display:flex; gap:8px; overflow-x:auto; padding-left:28px; padding-right:28px; }
+  #ra-roam-widget .action-btn{
+    flex:1; min-width:130px; text-align:center; font-size:12px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.02em; color:var(--text-dim);
+    background:var(--bg-raised); border:1px solid var(--line); border-radius:999px;
+    padding:11px 10px; white-space:nowrap; text-decoration:none;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  #ra-roam-widget .action-btn:hover{ color:var(--text); border-color:var(--line-strong); }
+  #ra-roam-widget .action-btn.primary{ background:var(--orange); color:var(--on-orange); border-color:var(--orange); }
+  @media(max-width:600px){
+    #ra-roam-widget .action-bar.top{ padding:10px 0; }
+    #ra-roam-widget .action-bar.bottom{ padding:16px 0 24px; }
+    #ra-roam-widget .action-bar .wrap{ padding-left:16px; padding-right:16px; }
+    #ra-roam-widget .action-btn{ font-size:11px; padding:10px 8px; min-width:0; }
+  }
 </style>
 
 <div id="ra-roam-widget">
+<!-- QUICK-JUMP ACTION BAR (top) -->
+<div class="action-bar top">
+  <div class="wrap">
+    <a href="https://book-a-test-ride.vercel.app/" target="_blank" rel="noopener" class="action-btn primary">Book test ride</a>
+    <a href="#ra-ownership" class="action-btn">Calculate savings</a>
+    <a href="#ra-financing" class="action-btn">Finance bike</a>
+    <a href="https://wa.me/254740666555" target="_blank" rel="noopener" class="action-btn">WhatsApp sales</a>
+  </div>
+</div>
+
 <!-- OWNERSHIP OVER TIME -->
 <section id="ra-ownership">
   <div class="wrap">
@@ -247,10 +286,10 @@
           </div>
         </div>
       </div>
-      <div style="font-size:11px; color:var(--text-faint); margin-top:10px;">During the loan: ICE at KES 430 loan + fuel · Swap at KES 450 loan + swap fee · Roam Air at KES 650 loan + charging. After the loan: you own the bike outright in every case — the swap rider still pays a swap fee forever since the battery itself is never owned, while the Roam Air rider owns the battery too and only pays for charging.</div>
+      <div style="font-size:11px; color:var(--text-faint); margin-top:10px;">During the loan: ICE KES 430/day · Swap KES 450/day · Roam Air KES 650/day (loan + energy). After: everyone owns their bike — swap riders still pay a battery fee forever; Roam Air riders just pay for charging.</div>
 
       <div class="chart-box" style="margin-top:20px; height:260px;"><canvas id="ra-ownershipChart"></canvas></div>
-      <div class="assump">Illustrative figures: internal combustion engine motorcycle financing at KES 15,000 deposit / KES 430 per day over 24 months. Battery swapping motorcycle financing at roughly KES 25,000 deposit / KES 450 per day over 24 months, for the vehicle only. Battery access is paid for separately, forever, since the battery is never owned. Roam Air shown at the M-KOPA · Roam · 1 Battery · 24-month plan from the financing plan below (KES 20,000 deposit / KES 650 per day). Energy and swap costs scale with the kilometres slider above.</div>
+      <div class="assump">Illustrative: ICE — KES 15,000 deposit, KES 430/day, 24 months. Swap bike — KES 25,000 deposit, KES 450/day, 24 months, vehicle only (battery fee is separate and never ends). Roam Air — M-KOPA · Roam · 1 Battery plan, KES 20,000 deposit, KES 650/day. Energy costs scale with the km slider above.</div>
     </div>
   </div>
 </section>
@@ -261,7 +300,7 @@
     <div class="section-head reveal">
       <div class="eyebrow">Financing</div>
       <h2>Own a Roam Air from as low as KES 15,000 deposit</h2>
-      <p class="sub">Over 90% of asset financing covered by a variety of financiers to choose from. Pick a plan and a repayment period below.</p>
+      <p class="sub">Over 90% financed. Choose a financier, plan, and repayment period below.</p>
     </div>
     <div id="ra-fin-layout">
       <div class="calc-card reveal" style="padding:32px;">
@@ -282,8 +321,8 @@
         <div class="tile"><div class="lbl">Daily payment</div><div class="amt" id="ra-fin-daily">KES 0</div></div>
         <div class="tile"><div class="lbl">Monthly payment</div><div class="amt" id="ra-fin-monthly">KES 0</div></div>
       </div>
-      <div class="finance-note" id="ra-fin-note">Figures shown are the financier's own quoted daily rate; monthly is daily × 30 for reference.</div>
-      <div style="margin-top:24px;"><a href="https://docs.google.com/forms/d/e/1FAIpQLSezb3vfHPb4Gvw0vRi0vcqhmTEcsxWcstYmxh7E3oa4rLZVDQ/viewform?usp=header" target="_blank" rel="noopener" class="btn btn-primary">Apply now</a></div>
+      <div class="finance-note" id="ra-fin-note">Daily rate is the financier's own quote; monthly = daily × 30.</div>
+      <div style="margin-top:24px;"><a href="https://book-a-test-ride.vercel.app/" target="_blank" rel="noopener" class="btn btn-primary">Apply now</a></div>
       </div>
     </div>
   </div>
@@ -313,7 +352,7 @@
       </div>
       <div class="chart-box"><canvas id="ra-tcoChart"></canvas></div>
     </div>
-    <div class="assump">Assumptions: internal combustion engine motorcycle and battery swapping motorcycle purchase price ~KES 150,000 each (typical 100cc commuter price, confirm with your team). Maintenance: internal combustion engine motorcycle KES 24,000/yr, Roam Air KES 7,200/yr, battery swapping motorcycle KES 8,400/yr. Fuel and charging costs use the ownership calculator assumptions above at 160 km/day, the average boda rider's daily distance. The swap rider never stops swapping: since the battery is never owned, that daily fee is charged every year in this table with no reduction over time, unlike a loan that eventually ends.</div>
+    <div class="assump">Assumptions: ICE and Swap bikes at ~KES 150,000 purchase price each. Maintenance: ICE KES 24,000/yr, Roam Air KES 7,200/yr, Swap KES 8,400/yr. Fuel/charging uses the 160 km/day assumption above. Swap fees never stop, since the battery is never owned.</div>
   </div>
 </section>
 
@@ -351,6 +390,16 @@
     </div>
   </div>
 </section>
+
+<!-- QUICK-JUMP ACTION BAR (bottom) -->
+<div class="action-bar bottom">
+  <div class="wrap">
+    <a href="https://book-a-test-ride.vercel.app/" target="_blank" rel="noopener" class="action-btn primary">Book test ride</a>
+    <a href="#ra-ownership" class="action-btn">Calculate savings</a>
+    <a href="#ra-financing" class="action-btn">Finance bike</a>
+    <a href="https://wa.me/254740666555" target="_blank" rel="noopener" class="action-btn">WhatsApp sales</a>
+  </div>
+</div>
 
 </div>
 
